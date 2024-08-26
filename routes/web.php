@@ -16,11 +16,8 @@ Route::middleware(['guest'])->group(function () {
     Route::get('/login', [App\Http\Controllers\Auth\LoginController::class, 'index'])->name('login')->middleware('guest');
     Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'authenticate'])->name('auth.authenticate');
 
-    Route::get('/register', function () {
-        return view('pages.auth.register');
-    })->name('auth.register.index');
-
-    Route::post('/post-register', [App\Http\Controllers\UserController::class, 'store'])->name('auth.register');
+    Route::get('/register', [App\Http\Controllers\Auth\RegisterController::class, 'index'])->name('auth.register.index');
+    Route::post('/post-register', [App\Http\Controllers\Auth\RegisterController::class, 'store'])->name('auth.register');
 });
 
 // Admin
