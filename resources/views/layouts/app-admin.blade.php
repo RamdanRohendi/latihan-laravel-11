@@ -5,7 +5,10 @@
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>My App @hasSection('title') - @yield('title') @endif</title>
 
-   <script src="https://cdn.tailwindcss.com"></script>
+   @vite('resources/css/app.css')
+   @vite('resources/js/app.js')
+
+   @stack('styles')
 </head>
 <body>
 	@include('layouts.partials.admin.sidebar')
@@ -18,6 +21,10 @@
         @include('layouts.partials.admin.footer')
 	</main>
 
+
 	<script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+    @stack('scripts')
 </body>
 </html>
