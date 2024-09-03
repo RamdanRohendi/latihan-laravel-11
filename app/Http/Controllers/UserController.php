@@ -2,11 +2,43 @@
 
 namespace App\Http\Controllers;
 
+use DataTables;
 use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+    public function getData(Request $request)
+    {
+        $users = User::query();
+
+        if (@$request->tipe == 'plain') {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data Users',
+                'data' => $users->get()
+            ]);
+        }
+
+        return DataTables::of($users)
+        ->addIndexColumn()
+        ->addColumn('action', function ($user) {
+            return '
+                <a href="'.route('admin.users.edit', $user->id).'" class="font-medium text-blue-600 hover:underline">Edit</a>
+                <form action="'.route('admin.users.destroy', $user->id).'" method="POST">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <input type="hidden" name="_token" value="'.csrf_token().'" />
+                    <button
+                        type="submit"
+                        class="font-medium text-red-600 hover:underline">
+                        Delete
+                    </button>
+                </form>
+            ';
+        })
+        ->toJson();
+    }
+
     public function index(Request $request)
     {
         if ($request->has('search')) {

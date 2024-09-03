@@ -27,6 +27,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/admin', [App\Http\Controllers\Auth\DashboardController::class, 'index'])->name('admin.dashboard');
 
     Route::middleware('can:admin')->group(function () {
+        Route::get('/admin/users/data', [App\Http\Controllers\UserController::class, 'getData'])->name('admin.users.data');
+
         Route::get('/admin/users', [App\Http\Controllers\UserController::class, 'index'])->name('admin.users.index');
         Route::get('/admin/users/form', [App\Http\Controllers\UserController::class, 'create'])->name('admin.users.create');
         Route::post('/admin/users/form', [App\Http\Controllers\UserController::class, 'store'])->name('admin.users.store');
