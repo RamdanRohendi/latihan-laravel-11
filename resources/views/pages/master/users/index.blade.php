@@ -2,29 +2,28 @@
 
 @section('isi')
     <section class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14">
-        <h1 class="mb-10">Page Users</h1>
+        <div class="flex align-middle justify-between">
+            <h1 class="mb-0 font-bold align-middle">List Users</h1>
 
-        <div class="flex justify-between">
-            <form class="w-2/4">
-                <label for="search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
-                <div class="relative">
-                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                        </svg>
-                    </div>
-                    <input type="search" id="search" name="search" value="{{ request('search') }}" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search" required />
-                    <button type="submit" class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
-                </div>
-            </form>
-
-            <a href="{{ route('admin.users.create') }}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+            <a href="{{ route('admin.users.create') }}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 focus:outline-none">
                 Tambah Data
             </a>
         </div>
 
-        <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
-            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-2 p-5">
+            <table id="example" class="min-w-full divide-y divide-x divide-gray-200 border">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="border py-3 text-xs font-bold text-gray-700 uppercase tracking-wider">No</th>
+                        <th class="border py-3 text-xs font-bold text-gray-700 uppercase tracking-wider">Updated At</th>
+                        <th class="border py-3 text-xs font-bold text-gray-700 uppercase tracking-wider">Name</th>
+                        <th class="border py-3 text-xs font-bold text-gray-700 uppercase tracking-wider">Email</th>
+                        <th class="border py-3 text-xs font-bold text-gray-700 uppercase tracking-wider">Aksi</th>
+                    </tr>
+                </thead>
+            </table>
+            <tbody class="bg-white divide-y divide-gray-200"></tbody>
+            {{-- <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
                         <th scope="col" class="px-6 py-3">
@@ -69,7 +68,147 @@
                         </tr>
                     @endforeach
                 </tbody>
-            </table>
+            </table> --}}
         </div>
     </section>
 @endsection
+
+@push('scripts')
+    <script type="module">
+        $(document).ready(function() {
+            const tableData = $('#example').DataTable({
+                processing: true,
+                serverSide: true,
+                responsive: true,
+                ajax: "{{ route('admin.users.data') }}",
+                order: [[1, 'desc']],
+                initComplete: function() {
+                    addCostumStyle();
+                },
+                drawCallback: function() {
+                    addCostumStyle();
+                },
+                columns: [
+                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+                    { data: 'updated_at', name: 'updated_at', orderable: true, searchable: true, visible: false },
+                    { data: 'name', name: 'name' },
+                    { data: 'email', name: 'email' },
+                    { data: 'action', name: 'action' },
+                ],
+                columnDefs: [
+                    {
+                        targets: 0,
+                        className: 'text-center border',
+                    },
+                    {
+                        targets: [1, 2, 3, 4],
+                        className: 'text-left px-2 border',
+                    },
+                ]
+            });
+
+            $(document).on('click', '.btn-delete', function() {
+                const form = $(this).closest('form');
+
+                Swal.fire({
+                    title: 'Anda yakin ingin menghapus data ini?',
+                    text: 'Data yang di hapus tidak dapat dikembalikan!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya',
+                    cancelButtonText: 'Tidak'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: form.attr('action'),
+                            type: 'DELETE',
+                            data: form.serialize(),
+                            success: function(result) {
+                                console.log(result);
+
+                                if (result.status == 'success') {
+                                    tableData.ajax.reload();
+
+                                    Swal.fire(
+                                        'Berhasil!',
+                                        result.message,
+                                        'success'
+                                    );
+                                }
+                            }
+                        })
+                    }
+                }).catch((error) => {
+                    console.log(error);
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Something went wrong!'
+                    })
+                })
+            });
+
+            $(window).on('resize', function() {
+                setTimeout(function() {
+                    addCostumStyle();
+                }, 300);
+            });
+
+            tableData.on('responsive-resize', function (e, datatable, columns) {
+            });
+        });
+
+        function addCostumStyle() {
+            $('.dt-layout-row').each(function(index, element) {
+                const row = $(this);
+
+                if (!row.hasClass('dt-layout-table')) {
+                    row.addClass('flex justify-between');
+                }
+            })
+
+            $('.dt-layout-table').addClass('p-3');
+
+            $('#dt-search-0').addClass('ms-3');
+            $('#example_wrapper').addClass('m-1');
+
+            $('.dt-paging>nav').addClass('inline-flex rounded-md shadow-sm');
+            $('.dt-paging>nav').attr('role', 'group');
+            $('.dt-paging>nav>span').addClass('px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-gray-200');
+            $('.dt-paging-button').each(function(index, element) {
+                const button = $(this);
+                const buttonGroupIndex = button.attr('data-dt-idx');
+                const isDisabled = button.attr('aria-disabled') == 'true';
+                const isActive = button.attr('aria-current') == 'page';
+
+                if (buttonGroupIndex == 'first') {
+                    if (isDisabled) {
+                        button.addClass('px-4 py-2 text-sm font-medium text-gray-300 bg-white border border-gray-200 rounded-s-lg');
+                        button.attr('disabled', 'disabled');
+                    } else {
+                        button.addClass('px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-s-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700');
+                    }
+                } else if (buttonGroupIndex == 'last') {
+                    if (isDisabled) {
+                        button.addClass('px-4 py-2 text-sm font-medium text-gray-300 bg-white border border-gray-200 rounded-e-lg');
+                        button.attr('disabled', 'disabled');
+                    } else {
+                        button.addClass('px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700');
+                    }
+                } else {
+                    if (isActive) {
+                        button.addClass('px-4 py-2 text-sm font-medium text-gray-900 bg-gray-200 border border-gray-200');
+                    } else if (isDisabled) {
+                        button.addClass('px-4 py-2 text-sm font-medium text-gray-300 bg-white border border-gray-200');
+                        button.attr('disabled', 'disabled');
+                    } else {
+                        button.addClass('px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700');
+                    }
+                }
+            });
+        }
+    </script>
+@endpush

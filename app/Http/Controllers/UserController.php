@@ -29,27 +29,20 @@ class UserController extends Controller
                     <input type="hidden" name="_method" value="DELETE">
                     <input type="hidden" name="_token" value="'.csrf_token().'" />
                     <button
-                        type="submit"
-                        class="font-medium text-red-600 hover:underline">
+                        type="button"
+                        class="font-medium text-red-600 hover:underline btn-delete">
                         Delete
                     </button>
                 </form>
             ';
         })
-        ->toJson();
+        ->rawColumns(['action'])
+        ->make(true);
     }
 
-    public function index(Request $request)
+    public function index()
     {
-        if ($request->has('search')) {
-            $users = User::where('name', 'like', '%' . $request->search . '%')->get();
-        } else {
-            $users = User::all();
-        }
-
-        return view('pages.master.users.index', [
-            'users' => $users,
-        ]);
+        return view('pages.master.users.index');
     }
 
     public function create()
@@ -123,11 +116,17 @@ class UserController extends Controller
         $user = User::find($id);
 
         if (!$user) {
-            return redirect()->back();
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Pengguna tidak ditemukan',
+            ]);
         }
 
         $user->delete();
 
-        return redirect()->route('admin.users.index');
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Pengguna berhasil dihapus',
+        ]);
     }
 }
