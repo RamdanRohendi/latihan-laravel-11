@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import DataTable from 'datatables.net-dt';
 
 window.axios = axios;
-window.$ = $;
+window.$ = window.jQuery = $;
 window.Swal = Swal;
 window.DataTable = DataTable;
 

@@ -5,8 +5,7 @@
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>My App @hasSection('title') - @yield('title') @endif</title>
 
-   @vite('resources/css/app.css')
-   @vite('resources/js/app.js')
+   @vite(['resources/css/app.css', 'resources/js/app.js'])
 
    @stack('styles')
 </head>
@@ -20,9 +19,6 @@
 
         @include('layouts.partials.admin.footer')
 	</main>
-
-
-	<script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
 
     @stack('scripts')
 </body>
