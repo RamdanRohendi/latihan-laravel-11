@@ -11,7 +11,11 @@ class CobaController extends Controller
      */
     public function index()
     {
-        //
+        $title = 'Kanban';
+        $template = file_get_contents(public_path('template/template_1/index.html'));
+        $template = str_replace('{{ title }}', $title, $template);
+        $template = str_replace('{{ asset_link }}', asset('template/template_1/assets/'), $template);
+        return $template;
     }
 
     /**

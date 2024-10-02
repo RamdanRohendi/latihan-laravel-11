@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Ramdan Rohendi</title>
+    <link rel="shortcut icon" href="favicon.ico" />
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+<body class="bg-light">
+	<div id="loading" class="row align-items-center vh-100 text-center fixed-top bg-white">
+		<div class="col">
+			<img id="Logo" src="{{ asset_link }}/LoGooo.png" alt="My Logo" width="30%"> <br>
+			<img id="Loading" src="{{ asset_link }}/Loading.gif" alt="Loading" width="75">
+		</div>
+	</div>
+	<div class="container text-center vh-100 d-flex align-items-center justify-content-center">
+		<div class="row">
+			<div class="col-12 mb-5">
+				<div class="card shadow m-2">
+					<div class="card-body">
+						<img id="Logo" src="{{ asset_link }}/LoGooo.png" alt="My Logo" width="75">
+						<h1>My Projects</h1>
+                        <h2>{{ title }}</h2>
+					</div>
+				</div>
+			</div>
+			<div class="col-12 col-md-4">
+				<div class="card shadow m-2">
+					<div class="card-body">
+						<a href="https://gudangku.ramand.my.id" target="_blank" class="btn btn-primary" rel="noopener">GudangKu</a> <br>
+						<small>(Website)</small>
+					</div>
+				</div>
+			</div>
+			<div class="col-12 col-md-4">
+				<div class="card shadow m-2">
+					<div class="card-body">
+						<a href="https://legogame.ramand.my.id" target="_blank" class="btn btn-primary" rel="noopener">Lego Survival</a> <br>
+						<small>(Unity Web)</small>
+					</div>
+				</div>
+			</div>
+			<div class="col-12 col-md-4">
+				<div class="card shadow m-2">
+					<div class="card-body">
+						<a href="https://flappygabut.ramand.my.id" target="_blank" class="btn btn-primary" rel="noopener">Flappy Gabut</a> <br>
+						<small>(Mobile)</small>
+					</div>
+				</div>
+			</div>
+			<div class="col-12">
+				<div class="card shadow m-2">
+					<div class="card-body">
+						<a href="https://pksatria.ramand.my.id" target="_blank" class="btn btn-primary" rel="noopener">Pembalasan Ksatria</a> <br>
+						<small>(On-Going)</small>
+					</div>
+				</div>
+			</div>
+            <div class="col-12">
+                <div class="card text-end bg-light border-0">
+                    <div class="card-body">
+                        <a href="https://github.com/ramdanrohendi" target="_blank" class="btn btn-link" rel="noopener">Github</a> |
+                        <a href="https://gitlab.com/ramdanrohendi" target="_blank" class="btn btn-link" rel="noopener">GitLab</a>
+                    </div>
+                </div>
+            </div>
+		</div>
+	</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+	<script>
+		function hiddenLoad() {
+			$('#loading').addClass('d-none');
+		}
+
+		setInterval(hiddenLoad, 3000);
+	</script>
+</body>
+</html>

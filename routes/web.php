@@ -11,6 +11,8 @@ Route::get('/team', function () {
     return view('pages.team');
 });
 
+Route::get('/kanban', [App\Http\Controllers\CobaController::class, 'index'])->name('kanban.index');
+
 // Auth
 Route::middleware(['guest'])->group(function () {
     Route::get('/login', [App\Http\Controllers\Auth\LoginController::class, 'index'])->name('login')->middleware('guest');
